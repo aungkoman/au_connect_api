@@ -6,26 +6,38 @@ async function setupMongoose () {
   mongoose.Promise = global.Promise
   // Suppress deprecation warning
   mongoose.set('strictQuery', true)
-  ;(async () => {
-    await mongoose.connect(config.db)
-  })()
-  const db = mongoose.connection
+  
+  // Connection options for better compatibility
+  const options = {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+    serverSelectionTimeoutMS: 5000, // Timeout after 5s instead of default 30s
+    socketTimeoutMS: 45000 // Close sockets after 45 seconds of inactivity
+  }
 
-  db.on('error', err => {
-    console.log('MONGOOSE ERR => ', err)
-  })
+  try {
+    await mongoose.connect(config.db, options)
+    const db = mongoose.connection
 
-  db.once('open', () => {
-    if (process.env.NODE_ENV !== 'test') {
-      console.info('CONNECTED TO => ', config.db)
-    }
-  })
-
-  process.on('SIGINT', () => {
-    db.close(() => {
-      process.exit(0)
+    db.on('error', err => {
+      console.log('MONGOOSE ERR => ', err)
     })
-  })
+
+    db.once('open', () => {
+      if (process.env.NODE_ENV !== 'test') {
+        console.info('CONNECTED TO => ', config.db)
+      }
+    })
+
+    process.on('SIGINT', () => {
+      db.close(() => {
+        process.exit(0)
+      })
+    })
+  } catch (error) {
+    console.error('Failed to connect to MongoDB:', error)
+    process.exit(1)
+  }
 }
 
 export default setupMongoose
