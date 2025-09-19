@@ -1,17 +1,27 @@
 import express from 'express'
 import bodyParser from 'body-parser'
 
-import { checkAuth } from '../middlewares/auth.middleware'
-import { errorHandler } from '../middlewares/handlers.middleware'
+import { checkAuth } from '../middlewares/auth.middleware.js'
+import { errorHandler } from '../middlewares/handlers.middleware.js'
 
 import path from 'path'
+import { fileURLToPath } from 'url'
+import { dirname } from 'path'
 import glob from 'glob'
 import morgan from 'morgan'
 import compression from 'compression'
 import cors from 'cors'
+import { readFileSync } from 'fs'
 
-import swaggerJson from '../docs/swagger.json'
 import redoc from 'redoc-express'
+
+// Get __dirname equivalent in ESM
+const __filename = fileURLToPath(import.meta.url)
+const __dirname = dirname(__filename)
+
+// Read swagger.json file
+const swaggerJsonPath = path.join(__dirname, '../docs/swagger.json')
+const swaggerJson = JSON.parse(readFileSync(swaggerJsonPath, 'utf8'))
 
 function setupExpress () {
   const app = express()
@@ -58,7 +68,10 @@ function setupExpress () {
   const dir = path.join(__dirname, '../routes/*.js')
   const routes = glob.sync(dir.replace(/\\/g, '/'))
   routes.forEach(route => {
-    require(route).default(app)
+    // Dynamically import the route
+    import(route).then(module => {
+      module.default(app)
+    })
   })
 
   app.use(errorHandler)

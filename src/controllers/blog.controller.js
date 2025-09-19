@@ -3,7 +3,7 @@ import {
   getBlogService,
   updateBlogService,
   deleteBlogService
-} from '../services/blog.service'
+} from '../services/blog.service.js'
 
 async function createBlog (req, res, next) {
   try {

@@ -1,7 +1,8 @@
 import Joi from '@hapi/joi'
-import { checkValidation } from './utils'
+import objectId from 'joi-objectid'
+import { checkValidation } from './utils.js'
 
-Joi.objectId = require('joi-objectid')(Joi)
+const objectIdValidator = objectId(Joi)
 
 export const createBlogValidation = (req, res, next) => {
   const { title, body, author, date } = req.body
@@ -26,7 +27,7 @@ export const getBlogValidation = (req, res, next) => {
   const { id } = req.params
 
   const schema = Joi.object({
-    id: Joi.objectId()
+    id: objectIdValidator()
   })
   const data = {
     id
@@ -40,7 +41,7 @@ export const updateBlogValidation = (req, res, next) => {
   const { title, body, author, date } = req.body
 
   const schema = Joi.object({
-    id: Joi.objectId(),
+    id: objectIdValidator(),
     title: Joi.string(),
     body: Joi.string(),
     author: Joi.string(),
@@ -61,7 +62,7 @@ export const deleteBlogValidation = (req, res, next) => {
   const { id } = req.params
 
   const schema = Joi.object({
-    id: Joi.objectId()
+    id: objectIdValidator()
   })
   const data = {
     id

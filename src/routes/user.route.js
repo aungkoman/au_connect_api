@@ -3,12 +3,12 @@ import express from 'express'
 import {
   signupValidation,
   signinValidation
-} from '../validations/user.validation'
+} from '../validations/user.validation.js'
 
 import {
   signup,
   signin
-} from '../controllers/user.controller'
+} from '../controllers/user.controller.js'
 
 const router = express.Router()
 

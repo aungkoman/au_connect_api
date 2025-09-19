@@ -5,14 +5,14 @@ import {
   getBlogValidation,
   updateBlogValidation,
   deleteBlogValidation
-} from '../validations/blog.validation'
+} from '../validations/blog.validation.js'
 
 import {
   createBlog,
   getBlog,
   updateBlog,
   deleteBlog
-} from '../controllers/blog.controller'
+} from '../controllers/blog.controller.js'
 
 const router = express.Router()
 

@@ -1,7 +1,8 @@
 import http from 'http'
-import setupExpress from './src/loaders/express'
-import setupMongoose from './src/loaders/mongoose'
-import config from './src/config/index'
+import setupExpress from './src/loaders/express.js'
+import setupMongoose from './src/loaders/mongoose.js'
+import config from './src/config/index.js'
+
 ;(async () => {
   try {
     await setupMongoose()

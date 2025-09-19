@@ -1,7 +1,7 @@
 import {
   signupService,
   signinService
-} from '../services/user.service'
+} from '../services/user.service.js'
 
 async function signup (req, res, next) {
   try {
